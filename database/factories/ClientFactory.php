@@ -11,13 +11,17 @@ class ClientFactory extends Factory
      */
     public function definition(): array
     {
+        $clientType = fake()->randomElement(['fizicko', 'pravno']);
+        
         return [
-            'name' => fake()->name(),
-            'client_type' => fake()->randomElement(["fizicko","pravno"]),
-            'email' => fake()->safeEmail(),
+            'name' => $clientType === 'fizicko' 
+                ? fake()->name() 
+                : fake()->company(),
+            'client_type' => $clientType,
+            'email' => fake()->unique()->safeEmail(),
             'phone' => fake()->phoneNumber(),
-            'address' => fake()->word(),
-            'note' => fake()->text(),
+            'address' => fake()->address(),
+            'note' => fake()->optional()->sentence(),
         ];
     }
 }

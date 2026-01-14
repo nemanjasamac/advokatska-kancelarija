@@ -13,11 +13,16 @@ class AppointmentFactory extends Factory
      */
     public function definition(): array
     {
+        $type = fake()->randomElement(['sastanak', 'rociste']);
+        $locations = $type === 'rociste' 
+            ? ['Osnovni sud Beograd', 'Viši sud Beograd', 'Privredni sud Beograd']
+            : ['Kancelarija', 'Online - Zoom', 'Kancelarija klijenta'];
+        
         return [
-            'date_time' => fake()->dateTime(),
-            'type' => fake()->randomElement(["sastanak","rociste"]),
-            'location' => fake()->word(),
-            'note' => fake()->text(),
+            'date_time' => fake()->dateTimeBetween('now', '+3 months'),
+            'type' => $type,
+            'location' => fake()->randomElement($locations),
+            'note' => fake()->optional()->sentence(),
             'legal_case_id' => LegalCase::factory(),
             'user_id' => User::factory(),
         ];

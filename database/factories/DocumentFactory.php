@@ -13,12 +13,15 @@ class DocumentFactory extends Factory
      */
     public function definition(): array
     {
+        $documentTypes = ['tuzba', 'zalba', 'zapisnik', 'punomoce', 'ugovor', 'resenje', 'presuda'];
+        $fileName = fake()->word() . '.pdf';
+        
         return [
-            'file_name' => fake()->word(),
-            'file_path' => fake()->word(),
-            'document_type' => fake()->word(),
-            'description' => fake()->text(),
-            'uploaded_at' => fake()->dateTime(),
+            'file_name' => $fileName,
+            'file_path' => 'documents/' . $fileName,
+            'document_type' => fake()->randomElement($documentTypes),
+            'description' => fake()->optional()->sentence(),
+            'uploaded_at' => fake()->dateTimeBetween('-1 year', 'now'),
             'legal_case_id' => LegalCase::factory(),
             'user_id' => User::factory(),
         ];

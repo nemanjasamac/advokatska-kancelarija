@@ -13,14 +13,19 @@ class LegalCaseFactory extends Factory
      */
     public function definition(): array
     {
+        $caseTypes = ['radni spor', 'privredni spor', 'krivicni postupak', 'porodicno pravo', 'naknada stete'];
+        $courts = ['Osnovni sud Beograd', 'Viši sud Beograd', 'Privredni sud Beograd', 'Apelacioni sud Beograd'];
+        $openedAt = fake()->dateTimeBetween('-2 years', 'now');
+        $status = fake()->randomElement(['novi', 'otvoren', 'u_toku', 'na_cekanju', 'zatvoren']);
+        
         return [
-            'title' => fake()->sentence(4),
-            'case_type' => fake()->word(),
-            'court' => fake()->word(),
-            'opponent' => fake()->word(),
-            'status' => fake()->randomElement(["novi","otvoren","u_toku","na_cekanju","zatvoren"]),
-            'opened_at' => fake()->date(),
-            'closed_at' => fake()->date(),
+            'title' => fake()->sentence(3),
+            'case_type' => fake()->randomElement($caseTypes),
+            'court' => fake()->randomElement($courts),
+            'opponent' => fake()->name(),
+            'status' => $status,
+            'opened_at' => $openedAt,
+            'closed_at' => $status === 'zatvoren' ? fake()->dateTimeBetween($openedAt, 'now') : null,
             'client_id' => Client::factory(),
             'user_id' => User::factory(),
         ];
