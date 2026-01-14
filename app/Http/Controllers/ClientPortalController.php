@@ -32,7 +32,7 @@ class ClientPortalController extends Controller
     {
         $client = $this->getClient();
 
-        $activeCases = $client->legalCases()->where('status', 'aktivan')->count();
+        $activeCases = $client->legalCases()->whereIn('status', ['otvoren', 'u_toku', 'novi'])->count();
         $totalDocuments = Document::whereIn('legal_case_id', $client->legalCases()->pluck('id'))->count();
         $upcomingAppointments = Appointment::whereIn('legal_case_id', $client->legalCases()->pluck('id'))
             ->where('date_time', '>=', now())
@@ -105,7 +105,7 @@ class ClientPortalController extends Controller
     public function createAppointment(): View
     {
         $client = $this->getClient();
-        $cases = $client->legalCases()->where('status', 'aktivan')->get();
+        $cases = $client->legalCases()->whereIn('status', ['otvoren', 'u_toku', 'novi'])->get();
 
         return view('portal.appointments.create', compact('cases'));
     }
