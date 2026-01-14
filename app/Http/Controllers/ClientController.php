@@ -36,6 +36,8 @@ class ClientController extends Controller
 
     public function show(Request $request, Client $client): View
     {
+        $client->load('legalCases');
+
         return view('client.show', [
             'client' => $client,
         ]);
