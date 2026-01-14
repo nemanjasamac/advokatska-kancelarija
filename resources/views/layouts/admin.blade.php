@@ -12,7 +12,7 @@
         <!-- Sidebar -->
         <aside class="w-64 bg-gray-800 text-white min-h-screen fixed">
             <div class="p-4 border-b border-gray-700">
-                <h1 class="text-xl font-bold">⚖️ Advokatska</h1>
+                <h1 class="text-xl font-bold">⚖️ Advokatska kancelarija</h1>
                 <p class="text-gray-400 text-sm">Admin Panel</p>
             </div>
             <nav class="mt-4">
