@@ -4,63 +4,78 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LegalCaseStoreRequest;
 use App\Http\Requests\LegalCaseUpdateRequest;
+use App\Models\Client;
 use App\Models\LegalCase;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class LegalCaseController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request): View
     {
-        $legalCases = LegalCase::all();
+        $legalCases = LegalCase::with(['client', 'user'])->get();
 
-        return view('legalCase.index', [
+        return view('legal-case.index', [
             'legalCases' => $legalCases,
         ]);
     }
 
-    public function create(Request $request): Response
+    public function create(Request $request): View
     {
-        return view('legalCase.create');
+        $clients = Client::all();
+        $users = User::all();
+
+        return view('legal-case.create', [
+            'clients' => $clients,
+            'users' => $users,
+        ]);
     }
 
-    public function store(LegalCaseStoreRequest $request): Response
+    public function store(LegalCaseStoreRequest $request): RedirectResponse
     {
         $legalCase = LegalCase::create($request->validated());
 
         $request->session()->flash('legalCase.id', $legalCase->id);
 
-        return redirect()->route('legalCases.index');
+        return redirect()->route('legal-cases.index');
     }
 
-    public function show(Request $request, LegalCase $legalCase): Response
+    public function show(Request $request, LegalCase $legalCase): View
     {
-        return view('legalCase.show', [
+        $legalCase->load(['client', 'user', 'documents', 'appointments']);
+
+        return view('legal-case.show', [
             'legalCase' => $legalCase,
         ]);
     }
 
-    public function edit(Request $request, LegalCase $legalCase): Response
+    public function edit(Request $request, LegalCase $legalCase): View
     {
-        return view('legalCase.edit', [
+        $clients = Client::all();
+        $users = User::all();
+
+        return view('legal-case.edit', [
             'legalCase' => $legalCase,
+            'clients' => $clients,
+            'users' => $users,
         ]);
     }
 
-    public function update(LegalCaseUpdateRequest $request, LegalCase $legalCase): Response
+    public function update(LegalCaseUpdateRequest $request, LegalCase $legalCase): RedirectResponse
     {
         $legalCase->update($request->validated());
 
         $request->session()->flash('legalCase.id', $legalCase->id);
 
-        return redirect()->route('legalCases.index');
+        return redirect()->route('legal-cases.index');
     }
 
-    public function destroy(Request $request, LegalCase $legalCase): Response
+    public function destroy(Request $request, LegalCase $legalCase): RedirectResponse
     {
         $legalCase->delete();
 
-        return redirect()->route('legalCases.index');
+        return redirect()->route('legal-cases.index');
     }
 }
