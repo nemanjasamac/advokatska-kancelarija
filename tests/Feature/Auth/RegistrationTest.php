@@ -9,15 +9,17 @@ class RegistrationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_registration_screen_can_be_rendered(): void
+    public function test_registration_screen_returns_404(): void
     {
+        // Registracija je onemogućena - samo admin može dodati korisnike
         $response = $this->get('/register');
 
-        $response->assertStatus(200);
+        $response->assertStatus(404);
     }
 
-    public function test_new_users_can_register(): void
+    public function test_registration_post_returns_404(): void
     {
+        // Registracija je onemogućena
         $response = $this->post('/register', [
             'name' => 'Test User',
             'email' => 'test@example.com',
@@ -25,7 +27,6 @@ class RegistrationTest extends TestCase
             'password_confirmation' => 'password',
         ]);
 
-        $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        $response->assertStatus(404);
     }
 }
