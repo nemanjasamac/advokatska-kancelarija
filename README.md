@@ -1,59 +1,318 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Advokatska Kancelarija
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Web aplikacija za upravljanje advokatskom kancelarijom. Omogućava evidenciju klijenata, pravnih predmeta, dokumenata i termina (sastanaka i ročišta).
 
-## About Laravel
+## 📋 Opis implementacije
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Korišćene tehnologije
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+| Kategorija | Tehnologija | Verzija |
+|------------|-------------|---------|
+| **Backend** | Laravel | 11.x |
+| **PHP** | PHP | 8.2 |
+| **Frontend** | Tailwind CSS | 3.x |
+| **Build tool** | Vite | 6.x |
+| **Autentifikacija** | Laravel Breeze | 2.3 |
+| **Baza podataka** | MySQL | 8.x |
+| **Code Generator** | Laravel Blueprint | 2.x |
+| **Code Style** | Laravel Pint | 1.x |
+| **Testing** | PHPUnit | 11.x |
+| **CI/CD** | GitHub Actions | - |
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Biblioteke i alati
+- **Laravel Breeze** - autentifikacija (login, logout, password reset)
+- **Laravel Blueprint** - generisanje modela, migracija, kontrolera i factory-a
+- **Laravel Pint** - automatsko formatiranje koda po PSR-12 standardu
+- **Tailwind CSS** - utility-first CSS framework za stilizovanje
+- **Vite** - build tool za kompajliranje CSS i JavaScript resursa
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## 🔗 GitHub repozitorijum
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**Link:** https://github.com/nemanjasamac/advokatska-kancelarija
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 📜 Blueprint skripta
 
-### Premium Partners
+Sledeći `draft.yaml` fajl korišćen je za generisanje modela, migracija, kontrolera i factory-a:
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+```yaml
+models:
+  Client:
+    name: string
+    client_type: enum:fizicko,pravno
+    email: string nullable
+    phone: string nullable
+    address: string nullable
+    note: text nullable
+    relationships:
+      hasMany: LegalCase
 
-## Contributing
+  LegalCase:
+    title: string
+    case_type: string
+    court: string nullable
+    opponent: string nullable
+    status: enum:novi,otvoren,u_toku,na_cekanju,zatvoren
+    opened_at: date
+    closed_at: date nullable
+    client_id: id foreign:clients
+    user_id: id foreign:users
+    relationships:
+      belongsTo: Client, User
+      hasMany: Document, Appointment
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+  Document:
+    file_name: string
+    file_path: string
+    document_type: string
+    description: text nullable
+    uploaded_at: datetime
+    legal_case_id: id foreign:legal_cases
+    user_id: id foreign:users
+    relationships:
+      belongsTo: LegalCase, User
 
-## Code of Conduct
+  Appointment:
+    date_time: datetime
+    type: enum:sastanak,rociste
+    location: string nullable
+    note: text nullable
+    legal_case_id: id foreign:legal_cases nullable
+    user_id: id foreign:users
+    relationships:
+      belongsTo: LegalCase, User
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+controllers:
+  Client:
+    resource: web
 
-## Security Vulnerabilities
+  LegalCase:
+    resource: web
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+  Document:
+    resource: web
 
-## License
+  Appointment:
+    resource: web
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**Pokretanje Blueprint-a:**
+```bash
+php artisan blueprint:build
+```
+
+---
+
+## ⚙️ GitHub Actions (CI/CD)
+
+Sadržaj `.github/workflows/ci.yml` fajla:
+
+```yaml
+name: CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, xml, ctype, json, bcmath, pdo, pdo_sqlite
+        coverage: none
+
+    - name: Install Composer dependencies
+      run: composer install --prefer-dist --no-progress --no-interaction
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install NPM dependencies
+      run: npm ci
+
+    - name: Build assets
+      run: npm run build
+
+    - name: Copy environment file
+      run: cp .env.example .env
+
+    - name: Generate application key
+      run: php artisan key:generate
+
+    - name: Run Pint (Code Style)
+      run: vendor/bin/pint --test
+
+    - name: Run tests
+      run: php artisan test
+      env:
+        DB_CONNECTION: sqlite
+        DB_DATABASE: ":memory:"
+```
+
+---
+
+## 📁 Struktura projekta i dokumentacija fajlova
+
+### Modeli (`app/Models/`)
+
+| Model | Generisano | Opis |
+|-------|------------|------|
+| `User.php` | Laravel default + ručno | Korisnici sistema (admini i klijenti). Dodato polje `role` i `client_id`. |
+| `Client.php` | Blueprint | Klijenti advokatske kancelarije (fizička/pravna lica). |
+| `LegalCase.php` | Blueprint | Pravni predmeti sa statusima i vezom na klijenta. |
+| `Document.php` | Blueprint | Dokumenti vezani za predmete (tužbe, ugovori, dokazi). |
+| `Appointment.php` | Blueprint | Termini (sastanci i ročišta). |
+
+### Kontroleri (`app/Http/Controllers/`)
+
+| Kontroler | Generisano | Opis |
+|-----------|------------|------|
+| `ClientController.php` | Blueprint | CRUD operacije za klijente. |
+| `LegalCaseController.php` | Blueprint | CRUD operacije za pravne predmete. |
+| `DocumentController.php` | Blueprint | CRUD operacije za dokumente. |
+| `AppointmentController.php` | Blueprint | CRUD operacije za termine. |
+| `DashboardController.php` | Ručno | Prikaz admin dashboard-a sa statistikom. |
+| `ClientPortalController.php` | Ručno | Portal za klijente - pregled predmeta i zakazivanje. |
+| `ProfileController.php` | Breeze | Upravljanje korisničkim profilom. |
+| `Auth/*` | Breeze | Autentifikacija (login, logout, password reset). |
+
+### Migracije (`database/migrations/`)
+
+| Migracija | Generisano | Opis |
+|-----------|------------|------|
+| `create_users_table` | Laravel | Osnovna tabela korisnika. |
+| `create_clients_table` | Blueprint | Tabela klijenata. |
+| `create_legal_cases_table` | Blueprint | Tabela pravnih predmeta. |
+| `create_documents_table` | Blueprint | Tabela dokumenata. |
+| `create_appointments_table` | Blueprint | Tabela termina. |
+| `add_role_to_users_table` | Ručno | Dodaje `role` enum i `client_id` FK u users tabelu. |
+
+### Seederi (`database/seeders/`)
+
+| Seeder | Generisano | Opis |
+|--------|------------|------|
+| `UserSeeder.php` | Ručno | Kreira admin korisnike. |
+| `ClientSeeder.php` | Ručno | Kreira test klijente. |
+| `LegalCaseSeeder.php` | Ručno | Kreira test predmete. |
+| `DocumentSeeder.php` | Ručno | Kreira test dokumente. |
+| `AppointmentSeeder.php` | Ručno | Kreira test termine. |
+| `ClientUserSeeder.php` | Ručno | Kreira demo naloge za klijente. |
+
+### Middleware (`app/Http/Middleware/`)
+
+| Middleware | Generisano | Opis |
+|------------|------------|------|
+| `AdminMiddleware.php` | Ručno | Proverava da li je korisnik admin. Štiti `/admin/*` rute. |
+
+### Views (`resources/views/`)
+
+| Folder | Generisano | Opis |
+|--------|------------|------|
+| `layouts/admin.blade.php` | Ručno | Glavni layout za admin panel sa sidebar navigacijom. |
+| `layouts/portal.blade.php` | Ručno | Layout za klijentski portal. |
+| `admin/*` | Ručno | Svi view-ovi za admin panel (CRUD stranice). |
+| `portal/*` | Ručno | View-ovi za klijentski portal. |
+| `auth/*` | Breeze | Login, register, password reset stranice. |
+| `components/*` | Breeze | Blade komponente za forme. |
+
+### Testovi (`tests/`)
+
+| Test | Opis |
+|------|------|
+| `Feature/ClientTest.php` | Testira CRUD operacije za klijente. |
+| `Feature/LegalCaseTest.php` | Testira CRUD operacije za predmete. |
+| `Feature/Auth/*` | Testira autentifikaciju (Breeze). |
+| `Feature/ProfileTest.php` | Testira upravljanje profilom. |
+
+**Ukupno: 35 testova**
+
+---
+
+## 🔐 Sistem uloga
+
+Aplikacija ima dva tipa korisnika:
+
+| Uloga | Pristup | Opis |
+|-------|---------|------|
+| **Admin** | `/admin/*` | Advokati - puni pristup svim funkcionalnostima. |
+| **Client** | `/portal/*` | Klijenti - pregled svojih predmeta i zakazivanje termina. |
+
+---
+
+## 🚀 Instalacija i pokretanje
+
+```bash
+# Kloniraj repozitorijum
+git clone https://github.com/nemanjasamac/advokatska-kancelarija.git
+cd advokatska-kancelarija
+
+# Instaliraj zavisnosti
+composer install
+npm install
+
+# Podesi environment
+cp .env.example .env
+php artisan key:generate
+
+# Kreiraj bazu i pokreni migracije
+php artisan migrate --seed
+
+# Builduj frontend
+npm run build
+
+# Pokreni server
+php artisan serve
+```
+
+Ili koristi `setup.bat` (Windows) za automatsku instalaciju.
+
+---
+
+## 👤 Demo nalozi
+
+| Uloga | Email | Lozinka |
+|-------|-------|---------|
+| Admin | admin@kancelarija.rs | password |
+| Admin | nsamac6623it@raf.rs | password |
+| Klijent | klijent@demo.rs | password |
+| Klijent | klijent@raf.rs | password |
+
+---
+
+## 📸 Screenshotovi aplikacije
+
+*[Dodati screenshotove]*
+
+---
+
+## 🎨 Figma dizajn
+
+*[Dodati link ka Figma fajlu]*
+
+---
+
+## 📊 Dijagram baze podataka
+
+*[Dodati screenshot relacija iz Figme]*
+
+---
+
+## 📝 Licenca
+
+MIT License
