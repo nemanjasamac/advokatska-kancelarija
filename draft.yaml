@@ -1,0 +1,58 @@
+models:
+  Client:
+    name: string
+    client_type: enum:fizicko,pravno
+    email: string nullable
+    phone: string nullable
+    address: string nullable
+    note: text nullable
+    relationships:
+      hasMany: LegalCase
+
+  LegalCase:
+    title: string
+    case_type: string
+    court: string nullable
+    opponent: string nullable
+    status: enum:novi,otvoren,u_toku,na_cekanju,zatvoren
+    opened_at: date
+    closed_at: date nullable
+    client_id: id foreign:clients
+    user_id: id foreign:users
+    relationships:
+      belongsTo: Client, User
+      hasMany: Document, Appointment
+
+  Document:
+    file_name: string
+    file_path: string
+    document_type: string
+    description: text nullable
+    uploaded_at: datetime
+    legal_case_id: id foreign:legal_cases
+    user_id: id foreign:users
+    relationships:
+      belongsTo: LegalCase, User
+
+  Appointment:
+    date_time: datetime
+    type: enum:sastanak,rociste
+    location: string nullable
+    note: text nullable
+    legal_case_id: id foreign:legal_cases nullable
+    user_id: id foreign:users
+    relationships:
+      belongsTo: LegalCase, User
+
+controllers:
+  Client:
+    resource: web
+
+  LegalCase:
+    resource: web
+
+  Document:
+    resource: web
+
+  Appointment:
+    resource: web
