@@ -12,6 +12,13 @@ class LegalCaseTest extends TestCase
 {
     use RefreshDatabase;
 
+    private function actingAsAdmin()
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        return $this->actingAs($admin);
+    }
+
     /**
      * Test UC2: Otvaranje novog predmeta za klijenta
      * Testira da se novi predmet uspešno kreira i povezuje sa klijentom
@@ -19,7 +26,7 @@ class LegalCaseTest extends TestCase
     public function test_legal_case_can_be_created_for_client(): void
     {
         $client = Client::factory()->create();
-        $user = User::factory()->create();
+        $user = User::factory()->create(['role' => 'admin']);
 
         $caseData = [
             'title' => 'Radni spor - otkaz',
@@ -32,9 +39,9 @@ class LegalCaseTest extends TestCase
             'user_id' => $user->id,
         ];
 
-        $response = $this->post(route('legal-cases.store'), $caseData);
+        $response = $this->actingAs($user)->post(route('admin.legal-cases.store'), $caseData);
 
-        $response->assertRedirect(route('legal-cases.index'));
+        $response->assertRedirect(route('admin.legal-cases.index'));
 
         $this->assertDatabaseHas('legal_cases', [
             'title' => 'Radni spor - otkaz',
@@ -87,7 +94,7 @@ class LegalCaseTest extends TestCase
     public function test_legal_case_status_can_be_updated(): void
     {
         $client = Client::factory()->create();
-        $user = User::factory()->create();
+        $user = User::factory()->create(['role' => 'admin']);
 
         $legalCase = LegalCase::factory()->create([
             'status' => 'novi',
@@ -104,9 +111,9 @@ class LegalCaseTest extends TestCase
             'user_id' => $user->id,
         ];
 
-        $response = $this->put(route('legal-cases.update', $legalCase), $updatedData);
+        $response = $this->actingAs($user)->put(route('admin.legal-cases.update', $legalCase), $updatedData);
 
-        $response->assertRedirect(route('legal-cases.index'));
+        $response->assertRedirect(route('admin.legal-cases.index'));
 
         $this->assertDatabaseHas('legal_cases', [
             'id' => $legalCase->id,
@@ -120,7 +127,7 @@ class LegalCaseTest extends TestCase
     public function test_legal_case_title_is_required(): void
     {
         $client = Client::factory()->create();
-        $user = User::factory()->create();
+        $user = User::factory()->create(['role' => 'admin']);
 
         $caseData = [
             'title' => '',
@@ -131,7 +138,7 @@ class LegalCaseTest extends TestCase
             'user_id' => $user->id,
         ];
 
-        $response = $this->post(route('legal-cases.store'), $caseData);
+        $response = $this->actingAs($user)->post(route('admin.legal-cases.store'), $caseData);
 
         $response->assertSessionHasErrors('title');
     }

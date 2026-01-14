@@ -17,7 +17,7 @@ class DocumentController extends Controller
     {
         $documents = Document::with(['legalCase', 'user'])->get();
 
-        return view('document.index', [
+        return view('admin.document.index', [
             'documents' => $documents,
         ]);
     }
@@ -25,9 +25,9 @@ class DocumentController extends Controller
     public function create(Request $request): View
     {
         $legalCases = LegalCase::all();
-        $users = User::all();
+        $users = User::where('role', 'admin')->get();
 
-        return view('document.create', [
+        return view('admin.document.create', [
             'legalCases' => $legalCases,
             'users' => $users,
         ]);
@@ -35,16 +35,27 @@ class DocumentController extends Controller
 
     public function store(DocumentStoreRequest $request): RedirectResponse
     {
-        $document = Document::create($request->validated());
+        $data = $request->validated();
 
-        $request->session()->flash('document.id', $document->id);
+        // Handle file upload
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $path = $file->store('documents', 'public');
+            $data['file_path'] = $path;
+            $data['file_name'] = $file->getClientOriginalName();
+        }
 
-        return redirect()->route('documents.index');
+        $data['uploaded_at'] = now();
+        $data['user_id'] = auth()->id();
+
+        $document = Document::create($data);
+
+        return redirect()->route('admin.documents.index')->with('success', 'Dokument je uspešno dodat.');
     }
 
     public function show(Request $request, Document $document): View
     {
-        return view('document.show', [
+        return view('admin.document.show', [
             'document' => $document,
         ]);
     }
@@ -52,9 +63,9 @@ class DocumentController extends Controller
     public function edit(Request $request, Document $document): View
     {
         $legalCases = LegalCase::all();
-        $users = User::all();
+        $users = User::where('role', 'admin')->get();
 
-        return view('document.edit', [
+        return view('admin.document.edit', [
             'document' => $document,
             'legalCases' => $legalCases,
             'users' => $users,
@@ -63,17 +74,35 @@ class DocumentController extends Controller
 
     public function update(DocumentUpdateRequest $request, Document $document): RedirectResponse
     {
-        $document->update($request->validated());
+        $data = $request->validated();
 
-        $request->session()->flash('document.id', $document->id);
+        // Handle file upload
+        if ($request->hasFile('file')) {
+            // Delete old file if exists
+            if ($document->file_path) {
+                \Storage::disk('public')->delete($document->file_path);
+            }
 
-        return redirect()->route('documents.index');
+            $file = $request->file('file');
+            $path = $file->store('documents', 'public');
+            $data['file_path'] = $path;
+            $data['file_name'] = $file->getClientOriginalName();
+        }
+
+        $document->update($data);
+
+        return redirect()->route('admin.documents.index')->with('success', 'Dokument je uspešno ažuriran.');
     }
 
     public function destroy(Request $request, Document $document): RedirectResponse
     {
+        // Delete file if exists
+        if ($document->file_path) {
+            \Storage::disk('public')->delete($document->file_path);
+        }
+
         $document->delete();
 
-        return redirect()->route('documents.index');
+        return redirect()->route('admin.documents.index')->with('success', 'Dokument je uspešno obrisan.');
     }
 }

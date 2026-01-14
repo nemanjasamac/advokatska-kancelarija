@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             LegalCaseSeeder::class,
             DocumentSeeder::class,
             AppointmentSeeder::class,
+            ClientUserSeeder::class,
         ]);
     }
 }

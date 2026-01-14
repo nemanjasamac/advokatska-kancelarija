@@ -15,14 +15,14 @@ class ClientController extends Controller
     {
         $clients = Client::all();
 
-        return view('client.index', [
+        return view('admin.client.index', [
             'clients' => $clients,
         ]);
     }
 
     public function create(Request $request): View
     {
-        return view('client.create');
+        return view('admin.client.create');
     }
 
     public function store(ClientStoreRequest $request): RedirectResponse
@@ -31,21 +31,21 @@ class ClientController extends Controller
 
         $request->session()->flash('client.id', $client->id);
 
-        return redirect()->route('clients.index');
+        return redirect()->route('admin.clients.index');
     }
 
     public function show(Request $request, Client $client): View
     {
         $client->load('legalCases');
 
-        return view('client.show', [
+        return view('admin.client.show', [
             'client' => $client,
         ]);
     }
 
     public function edit(Request $request, Client $client): View
     {
-        return view('client.edit', [
+        return view('admin.client.edit', [
             'client' => $client,
         ]);
     }
@@ -56,13 +56,13 @@ class ClientController extends Controller
 
         $request->session()->flash('client.id', $client->id);
 
-        return redirect()->route('clients.index');
+        return redirect()->route('admin.clients.index');
     }
 
     public function destroy(Request $request, Client $client): RedirectResponse
     {
         $client->delete();
 
-        return redirect()->route('clients.index');
+        return redirect()->route('admin.clients.index');
     }
 }

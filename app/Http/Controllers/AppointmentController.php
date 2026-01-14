@@ -15,9 +15,9 @@ class AppointmentController extends Controller
 {
     public function index(Request $request): View
     {
-        $appointments = Appointment::with(['legalCase', 'user'])->get();
+        $appointments = Appointment::with(['legalCase', 'user'])->orderBy('date_time')->get();
 
-        return view('appointment.index', [
+        return view('admin.appointment.index', [
             'appointments' => $appointments,
         ]);
     }
@@ -25,9 +25,9 @@ class AppointmentController extends Controller
     public function create(Request $request): View
     {
         $legalCases = LegalCase::all();
-        $users = User::all();
+        $users = User::where('role', 'admin')->get();
 
-        return view('appointment.create', [
+        return view('admin.appointment.create', [
             'legalCases' => $legalCases,
             'users' => $users,
         ]);
@@ -37,14 +37,12 @@ class AppointmentController extends Controller
     {
         $appointment = Appointment::create($request->validated());
 
-        $request->session()->flash('appointment.id', $appointment->id);
-
-        return redirect()->route('appointments.index');
+        return redirect()->route('admin.appointments.index')->with('success', 'Termin je uspešno kreiran.');
     }
 
     public function show(Request $request, Appointment $appointment): View
     {
-        return view('appointment.show', [
+        return view('admin.appointment.show', [
             'appointment' => $appointment,
         ]);
     }
@@ -52,9 +50,9 @@ class AppointmentController extends Controller
     public function edit(Request $request, Appointment $appointment): View
     {
         $legalCases = LegalCase::all();
-        $users = User::all();
+        $users = User::where('role', 'admin')->get();
 
-        return view('appointment.edit', [
+        return view('admin.appointment.edit', [
             'appointment' => $appointment,
             'legalCases' => $legalCases,
             'users' => $users,
@@ -65,15 +63,13 @@ class AppointmentController extends Controller
     {
         $appointment->update($request->validated());
 
-        $request->session()->flash('appointment.id', $appointment->id);
-
-        return redirect()->route('appointments.index');
+        return redirect()->route('admin.appointments.index')->with('success', 'Termin je uspešno ažuriran.');
     }
 
     public function destroy(Request $request, Appointment $appointment): RedirectResponse
     {
         $appointment->delete();
 
-        return redirect()->route('appointments.index');
+        return redirect()->route('admin.appointments.index')->with('success', 'Termin je uspešno obrisan.');
     }
 }

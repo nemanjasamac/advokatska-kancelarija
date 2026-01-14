@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
             'name' => 'Admin',
             'email' => 'admin@kancelarija.rs',
             'password' => Hash::make('password'),
+            'role' => 'admin',
         ]);
 
         // Kreiranje advokata - Marko Jovanović (persona 1)
@@ -25,6 +26,7 @@ class UserSeeder extends Seeder
             'name' => 'Marko Jovanović',
             'email' => 'marko@kancelarija.rs',
             'password' => Hash::make('password'),
+            'role' => 'admin',
         ]);
 
         // Kreiranje pravnog asistenta - Ana Petrović (persona 2)
@@ -32,6 +34,7 @@ class UserSeeder extends Seeder
             'name' => 'Ana Petrović',
             'email' => 'ana@kancelarija.rs',
             'password' => Hash::make('password'),
+            'role' => 'admin',
         ]);
 
         // Kreiranje advokata saradnika - Milan Nikolić (persona 3)
@@ -39,6 +42,7 @@ class UserSeeder extends Seeder
             'name' => 'Milan Nikolić',
             'email' => 'milan@kancelarija.rs',
             'password' => Hash::make('password'),
+            'role' => 'admin',
         ]);
     }
 }

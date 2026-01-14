@@ -3,12 +3,20 @@
 namespace Tests\Feature;
 
 use App\Models\Client;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ClientTest extends TestCase
 {
     use RefreshDatabase;
+
+    private function actingAsAdmin()
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        return $this->actingAs($admin);
+    }
 
     /**
      * Test UC1: Dodavanje novog klijenta
@@ -25,9 +33,9 @@ class ClientTest extends TestCase
             'note' => 'Novi klijent za radni spor',
         ];
 
-        $response = $this->post(route('clients.store'), $clientData);
+        $response = $this->actingAsAdmin()->post(route('admin.clients.store'), $clientData);
 
-        $response->assertRedirect(route('clients.index'));
+        $response->assertRedirect(route('admin.clients.index'));
 
         $this->assertDatabaseHas('clients', [
             'name' => 'Petar Petrović',
@@ -60,7 +68,7 @@ class ClientTest extends TestCase
             'client_type' => 'fizicko',
         ];
 
-        $response = $this->post(route('clients.store'), $clientData);
+        $response = $this->actingAsAdmin()->post(route('admin.clients.store'), $clientData);
 
         $response->assertSessionHasErrors('name');
     }
@@ -79,9 +87,9 @@ class ClientTest extends TestCase
             'client_type' => 'fizicko',
         ];
 
-        $response = $this->put(route('clients.update', $client), $updatedData);
+        $response = $this->actingAsAdmin()->put(route('admin.clients.update', $client), $updatedData);
 
-        $response->assertRedirect(route('clients.index'));
+        $response->assertRedirect(route('admin.clients.index'));
 
         $this->assertDatabaseHas('clients', [
             'id' => $client->id,
@@ -96,9 +104,9 @@ class ClientTest extends TestCase
     {
         $client = Client::factory()->create();
 
-        $response = $this->delete(route('clients.destroy', $client));
+        $response = $this->actingAsAdmin()->delete(route('admin.clients.destroy', $client));
 
-        $response->assertRedirect(route('clients.index'));
+        $response->assertRedirect(route('admin.clients.index'));
 
         $this->assertDatabaseMissing('clients', [
             'id' => $client->id,

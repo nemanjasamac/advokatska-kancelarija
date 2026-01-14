@@ -17,7 +17,7 @@ class LegalCaseController extends Controller
     {
         $legalCases = LegalCase::with(['client', 'user'])->get();
 
-        return view('legal-case.index', [
+        return view('admin.legal-case.index', [
             'legalCases' => $legalCases,
         ]);
     }
@@ -25,9 +25,9 @@ class LegalCaseController extends Controller
     public function create(Request $request): View
     {
         $clients = Client::all();
-        $users = User::all();
+        $users = User::where('role', 'admin')->get();
 
-        return view('legal-case.create', [
+        return view('admin.legal-case.create', [
             'clients' => $clients,
             'users' => $users,
         ]);
@@ -39,14 +39,14 @@ class LegalCaseController extends Controller
 
         $request->session()->flash('legalCase.id', $legalCase->id);
 
-        return redirect()->route('legal-cases.index');
+        return redirect()->route('admin.legal-cases.index');
     }
 
     public function show(Request $request, LegalCase $legalCase): View
     {
         $legalCase->load(['client', 'user', 'documents', 'appointments']);
 
-        return view('legal-case.show', [
+        return view('admin.legal-case.show', [
             'legalCase' => $legalCase,
         ]);
     }
@@ -54,9 +54,9 @@ class LegalCaseController extends Controller
     public function edit(Request $request, LegalCase $legalCase): View
     {
         $clients = Client::all();
-        $users = User::all();
+        $users = User::where('role', 'admin')->get();
 
-        return view('legal-case.edit', [
+        return view('admin.legal-case.edit', [
             'legalCase' => $legalCase,
             'clients' => $clients,
             'users' => $users,
@@ -69,13 +69,13 @@ class LegalCaseController extends Controller
 
         $request->session()->flash('legalCase.id', $legalCase->id);
 
-        return redirect()->route('legal-cases.index');
+        return redirect()->route('admin.legal-cases.index');
     }
 
     public function destroy(Request $request, LegalCase $legalCase): RedirectResponse
     {
         $legalCase->delete();
 
-        return redirect()->route('legal-cases.index');
+        return redirect()->route('admin.legal-cases.index');
     }
 }
