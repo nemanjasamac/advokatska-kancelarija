@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('case_type');
             $table->string('court')->nullable();
             $table->string('opponent')->nullable();
-            $table->enum('status', ["novi","otvoren","u_toku","na_cekanju","zatvoren"]);
+            $table->enum('status', ['novi', 'otvoren', 'u_toku', 'na_cekanju', 'zatvoren']);
             $table->date('opened_at');
             $table->date('closed_at')->nullable();
             $table->foreignId('client_id')->constrained();

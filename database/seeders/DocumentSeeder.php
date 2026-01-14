@@ -20,7 +20,7 @@ class DocumentSeeder extends Seeder
         // Svaki predmet ima 1-5 dokumenata
         foreach ($legalCases as $legalCase) {
             $numberOfDocuments = rand(1, 5);
-            
+
             Document::factory($numberOfDocuments)->create([
                 'legal_case_id' => $legalCase->id,
                 'user_id' => $users->random()->id,

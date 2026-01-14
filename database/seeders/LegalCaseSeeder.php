@@ -20,7 +20,7 @@ class LegalCaseSeeder extends Seeder
         // Svaki klijent ima 1-3 predmeta
         foreach ($clients as $client) {
             $numberOfCases = rand(1, 3);
-            
+
             LegalCase::factory($numberOfCases)->create([
                 'client_id' => $client->id,
                 'user_id' => $users->random()->id,

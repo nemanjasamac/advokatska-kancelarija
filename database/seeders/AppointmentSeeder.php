@@ -20,7 +20,7 @@ class AppointmentSeeder extends Seeder
         // Aktivni predmeti imaju 0-3 zakazana termina
         foreach ($legalCases as $legalCase) {
             $numberOfAppointments = rand(0, 3);
-            
+
             Appointment::factory($numberOfAppointments)->create([
                 'legal_case_id' => $legalCase->id,
                 'user_id' => $users->random()->id,

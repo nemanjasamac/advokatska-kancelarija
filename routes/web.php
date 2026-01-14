@@ -6,7 +6,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
 Route::resource('clients', App\Http\Controllers\ClientController::class);
 
 Route::resource('legal-cases', App\Http\Controllers\LegalCaseController::class);

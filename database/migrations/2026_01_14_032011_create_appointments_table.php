@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('appointments', function (Blueprint $table) {
             $table->id();
             $table->dateTime('date_time');
-            $table->enum('type', ["sastanak","rociste"]);
+            $table->enum('type', ['sastanak', 'rociste']);
             $table->string('location')->nullable();
             $table->text('note')->nullable();
             $table->foreignId('legal_case_id')->nullable()->constrained();

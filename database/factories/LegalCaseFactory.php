@@ -17,7 +17,7 @@ class LegalCaseFactory extends Factory
         $courts = ['Osnovni sud Beograd', 'Viši sud Beograd', 'Privredni sud Beograd', 'Apelacioni sud Beograd'];
         $openedAt = fake()->dateTimeBetween('-2 years', 'now');
         $status = fake()->randomElement(['novi', 'otvoren', 'u_toku', 'na_cekanju', 'zatvoren']);
-        
+
         return [
             'title' => fake()->sentence(3),
             'case_type' => fake()->randomElement($caseTypes),
