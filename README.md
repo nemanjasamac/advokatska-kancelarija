@@ -297,19 +297,25 @@ Ili koristi `setup.bat` (Windows) za automatsku instalaciju.
 
 ## 📸 Screenshotovi aplikacije
 
-*[Dodati screenshotove]*
+<img width="2552" height="936" alt="image" src="https://github.com/user-attachments/assets/3a083b17-ef37-42f4-8aa2-7f86606e4550" />
+<img width="2555" height="927" alt="image" src="https://github.com/user-attachments/assets/8f292037-402c-4967-bdca-348ebacb480f" />
+<img width="2550" height="936" alt="image" src="https://github.com/user-attachments/assets/070edfe0-9c1e-408e-b24b-7596e58e154e" />
+<img width="1223" height="944" alt="image" src="https://github.com/user-attachments/assets/0d93ec03-45f5-4cee-b340-e8083600bfee" />
+<img width="2539" height="939" alt="image" src="https://github.com/user-attachments/assets/bf4a0461-c622-492f-ba9b-38a9499bff7c" />
+
 
 ---
 
 ## 🎨 Figma dizajn
 
-*[Dodati link ka Figma fajlu]*
+https://www.figma.com/proto/MQqhrWJIBd4MjEgEBapSRO/Untitled?node-id=0-1&t=eN72PClc3wjXD3gM-1
+https://www.figma.com/design/MQqhrWJIBd4MjEgEBapSRO/Untitled?node-id=0-1&m=dev&t=eN72PClc3wjXD3gM-1
 
 ---
 
 ## 📊 Dijagram baze podataka
 
-*[Dodati screenshot relacija iz Figme]*
+<img width="1904" height="933" alt="image" src="https://github.com/user-attachments/assets/0c2e84bc-b4db-4910-a446-eeb325bf8506" />
 
 ---
 
