@@ -9,9 +9,13 @@ use App\Http\Controllers\LegalCaseController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-// Public routes
+// Public routes - redirect to login or dashboard
 Route::get('/', function () {
-    return view('welcome');
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+
+    return redirect()->route('login');
 });
 
 // Admin routes (for lawyers)

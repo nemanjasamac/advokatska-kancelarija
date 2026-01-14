@@ -10,12 +10,12 @@ class ExampleTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * A basic test example.
+     * Test that the home page redirects to login.
      */
-    public function test_the_application_returns_a_successful_response(): void
+    public function test_the_application_redirects_to_login(): void
     {
         $response = $this->get('/');
 
-        $response->assertStatus(200);
+        $response->assertRedirect('/login');
     }
 }
